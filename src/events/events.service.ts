@@ -18,8 +18,10 @@ export class EventsService {
     return `This action returns all events`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} event`;
+  async findOne(id: number) {
+    const event = await this.eventsRepository.findOne(id);
+    return event;
+    //return `This action returns a #${id} event`;
   }
 
   update(id: number, updateEventDto: UpdateEventDto) {
