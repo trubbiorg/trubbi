@@ -35,7 +35,12 @@ export class ProvidersService {
     return `This action updates a #${id} provider`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} provider`;
+  async remove(id: number) {
+    const provider = await this.repo.findOne(id);
+    if(!provider){
+      throw new HttpException("No se encontro el Proveedor solicitado.", 404);
+    }
+    await this.repo.removeAndFlush(provider)
+    return `This action removed a #${id} provider`;
   }
 }
