@@ -3,6 +3,7 @@ import { CreateProviderDto } from './dto/create-provider.dto';
 import { UpdateProviderDto } from './dto/update-provider.dto';
 import { Provider } from './provider.entity';
 import { ProviderRepository } from './providers.repository';
+import { EventsRepository } from '../events/events.repository';
 
 @Injectable()
 export class ProvidersService {
@@ -19,14 +20,14 @@ export class ProvidersService {
   async findOne(id: number) {
     const provider = await this.repo.findOne(id);
     console.log(provider);
-    if(!provider){
-      throw new HttpException("No se encontro el Proveedor solicitado.", 404);
+    if (!provider) {
+      throw new HttpException( "No se encontro el Proveedor solicitado.", 404 );
     }
     return provider;
   }
 
   async findEvents(id: number) {
-    const provider = await this.repo.findOne(id);
+    const provider = await this.repo.findOne(id, { populate: ['events'] });
     return provider.events;
   }
 
