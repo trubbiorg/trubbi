@@ -26,4 +26,8 @@ export class Category {
 
   @Property()
   deleted_at: Date;
+
+  constructor(name: string) {
+    this.name = name;
+  }
 }
