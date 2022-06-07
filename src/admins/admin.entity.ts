@@ -23,8 +23,9 @@ export class Admin {
   @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  @Property()
-  deleted_at: Date;
+  @Property({nullable : true})
+  deleted_at?: Date = null;
+
 
   constructor(name: string, email: string, password: string) {
     this.name = name;

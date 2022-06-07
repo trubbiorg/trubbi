@@ -7,6 +7,7 @@ import { Category } from './category.entity';
 @Module({
   controllers: [CategoriesController],
   imports: [MikroOrmModule.forFeature({ entities: [Category] })],
-  providers: [CategoriesService]
+  providers: [CategoriesService],
+  exports: [CategoriesService]
 })
 export class CategoriesModule {}
