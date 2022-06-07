@@ -23,4 +23,13 @@ export class TouristsEvent {
 
   @OneToOne(() => Opinion, opinion => opinion.touristEvent)
   opinion!: Opinion;
+
+  @Property()
+  createdAt: Date = new Date();
+
+  @Property({ onUpdate: () => new Date() })
+  updatedAt: Date = new Date();
+
+  @Property({nullable : true})
+  deleted_at?: Date = null;
 }

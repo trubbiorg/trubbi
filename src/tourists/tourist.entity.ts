@@ -1,4 +1,5 @@
 import { Collection, Entity, ManyToMany, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { plainToClassFromExist } from "class-transformer";
 import crypto from 'crypto';
 import { Category } from "../categories/category.entity";
 import { Event } from "../events/event.entity";
@@ -35,13 +36,13 @@ export class Tourist {
   @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  @Property()
-  deleted_at: Date;
+  @Property({nullable : true})
+  deleted_at?: Date = null;
 
   constructor(name: string, email: string, phone: string, password: string) {
     this.name = name;
     this.email = email;
     this.phone = phone;
-    this.password = crypto.createHmac('sha256', password).digest('hex');
+    this.password = password;
   }
 }
