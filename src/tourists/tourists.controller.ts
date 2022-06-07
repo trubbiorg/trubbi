@@ -21,7 +21,7 @@ export class TouristsController {
   }
 
   @Get()
-  findAll(): string {
+  findAll() {
     return this.touristsService.findAll();
   }
 
@@ -38,5 +38,10 @@ export class TouristsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.touristsService.remove(+id);
+  }
+
+  @Post('addCategory')
+  addCategory(@Body() categoryId : number){
+    return this.touristsService.addCategory(categoryId);
   }
 }

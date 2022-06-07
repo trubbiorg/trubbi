@@ -1,4 +1,5 @@
 import { Collection, Entity, ManyToMany, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { plainToClassFromExist } from "class-transformer";
 import crypto from 'crypto';
 import { Category } from "../categories/category.entity";
 import { Event } from "../events/event.entity";
@@ -42,6 +43,6 @@ export class Tourist {
     this.name = name;
     this.email = email;
     this.phone = phone;
-    this.password = crypto.createHmac('sha256', password).digest('hex');
+    this.password = password;
   }
 }
