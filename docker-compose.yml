@@ -3,9 +3,10 @@ services:
     node:
         container_name: trubbi
         entrypoint: /usr/aplication/start.sh
-        image: trubbi-node
+        build:
+            context: .
+            dockerfile: ./Dockerfile
         restart: unless-stopped
-        user: node
         volumes:
             - ./:/usr/aplication
         working_dir: /usr/aplication
@@ -13,8 +14,7 @@ services:
             - "3060:3000"
             - "9665:9662"
         networks:
-            - trubbi-net     
-
+            - trubbi-net
     mariadb:
         image: mariadb:10.8.3
         container_name: trubbi-mariadb
