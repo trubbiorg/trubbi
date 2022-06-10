@@ -15,6 +15,7 @@ services:
             - "9665:9662"
         networks:
             - trubbi-net
+    
     mariadb:
         image: mariadb:10.8.3
         container_name: trubbi-mariadb
@@ -99,6 +100,7 @@ services:
             - "4040:80"
         networks:
             - trubbi-net  
+    
     adminmongo:
         image: mrvautin/adminmongo
         ports:
@@ -107,6 +109,7 @@ services:
             - HOST=0.0.0.0
         networks:
             - trubbi-net  
+    
     grafana:
         image: grafana/grafana-oss
         ports:
