@@ -3,9 +3,10 @@ services:
     node:
         container_name: trubbi
         entrypoint: /usr/aplication/start.sh
-        image: trubbi-node
+        build:
+            context: .
+            dockerfile: ./Dockerfile
         restart: unless-stopped
-        user: node
         volumes:
             - ./:/usr/aplication
         working_dir: /usr/aplication
@@ -13,8 +14,8 @@ services:
             - "3060:3000"
             - "9665:9662"
         networks:
-            - trubbi-net     
-
+            - trubbi-net
+    
     mariadb:
         image: mariadb:10.8.3
         container_name: trubbi-mariadb
@@ -40,26 +41,33 @@ services:
             - trubbi-net  
 
     cygnus:
-        image: fiware/cygnus-ngsi
+        image: fiware/cygnus-ngsi:1.13.0
+        ##image: fiware/cygnus-ngsi
         hostname: cygnus
         container_name: fiware-cygnus
         ports:
             - "5055:5055"
             - "5080:5080" 
         environment:
-            - "CYGNUS_POSTGRESQL_HOST=postgres"
-            - "CYGNUS_POSTGRESQL_PORT=5432"
-            - "CYGNUS_POSTGRESQL_USER=postgres"
-            - "CYGNUS_POSTGRESQL_PASS=password"
-            - "CYGNUS_POSTGRESQL_DATABASE=postgres"
-            - "CYGNUS_POSTGRESQL_ENABLE_CACHE=true"
-            - "CYGNUS_POSTGRESQL_SERVICE_PORT=5055"
+            #- "CYGNUS_POSTGRESQL_HOST=postgres"
+            #- "CYGNUS_POSTGRESQL_PORT=5432"
+            #- "CYGNUS_POSTGRESQL_USER=postgres"
+            #- "CYGNUS_POSTGRESQL_PASS=password"
+            #- "CYGNUS_POSTGRESQL_DATABASE=postgres"
+            #- "CYGNUS_POSTGRESQL_SERVICE_PORT=5055"
+            - CYGNUS_MYSQL_HOST=trubbi-mariadb
+            - CYGNUS_MYSQL_PORT=3306
+            - CYGNUS_MYSQL_USER=root
+            - CYGNUS_MYSQL_PASS=trubbi
+            - CYGNUS_MYSQL_BATCH_SIZE=1
             - "CYGNUS_LOG_LEVEL=DEBUG"
             - "CYGNUS_SERVICE_PORT=5055"
             - "CYGNUS_API_PORT=5080"
         networks:
             - trubbi-net  
-
+        depends_on:
+            - postgresdb
+    
     mongodb:
         image: mongo:3.6
         container_name: mongodb
@@ -99,6 +107,7 @@ services:
             - "4040:80"
         networks:
             - trubbi-net  
+    
     adminmongo:
         image: mrvautin/adminmongo
         ports:
@@ -107,6 +116,7 @@ services:
             - HOST=0.0.0.0
         networks:
             - trubbi-net  
+    
     grafana:
         image: grafana/grafana-oss
         ports:
