@@ -30,6 +30,11 @@ export class TouristsController {
     return this.touristsService.findOne(+id);
   }
 
+  @Get(':id/events')
+  findEvents(@Param('id') id: number) {
+    return this.touristsService.findEvents(+id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTouristDto: UpdateTouristDto) {
     return this.touristsService.update(+id, updateTouristDto);
