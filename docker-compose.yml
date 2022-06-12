@@ -41,20 +41,13 @@ services:
             - trubbi-net  
 
     cygnus:
-        image: fiware/cygnus-ngsi:1.13.0
-        ##image: fiware/cygnus-ngsi
+        image: fiware/cygnus-ngsi
         hostname: cygnus
         container_name: fiware-cygnus
         ports:
             - "5055:5055"
             - "5080:5080" 
         environment:
-            #- "CYGNUS_POSTGRESQL_HOST=postgres"
-            #- "CYGNUS_POSTGRESQL_PORT=5432"
-            #- "CYGNUS_POSTGRESQL_USER=postgres"
-            #- "CYGNUS_POSTGRESQL_PASS=password"
-            #- "CYGNUS_POSTGRESQL_DATABASE=postgres"
-            #- "CYGNUS_POSTGRESQL_SERVICE_PORT=5055"
             - CYGNUS_MYSQL_HOST=trubbi-mariadb
             - CYGNUS_MYSQL_PORT=3306
             - CYGNUS_MYSQL_USER=root
@@ -66,7 +59,7 @@ services:
         networks:
             - trubbi-net  
         depends_on:
-            - postgresdb
+            - mariadb
     
     mongodb:
         image: mongo:3.6
@@ -79,35 +72,7 @@ services:
             - mongo_db_volume:/data
         networks:
             - trubbi-net  
-      
-    postgresdb:
-        image: postgres
-        hostname: postgres
-        container_name: postgresdb
-        ports:
-            - "5432:5432"
-        environment:
-            - "POSTGRES_PASSWORD=password"
-            - "POSTGRES_USER=postgres"
-            - "POSTGRES_DB=postgres"
-        volumes:
-            - postgres_db_volume:/var/lib/postgresql/data
-        networks:
-            - trubbi-net  
 
-    pgadmin:
-        container_name: pgadmin
-        image: dpage/pgadmin4:latest
-        environment:
-            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@ort.edu.ar}
-            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-        volumes:
-            - postgres_db_volume:/root/.pgadmin
-        ports:
-            - "4040:80"
-        networks:
-            - trubbi-net  
-    
     adminmongo:
         image: mrvautin/adminmongo
         ports:
@@ -135,5 +100,4 @@ networks:
 volumes:
     trubbi_db_volume:
     mongo_db_volume:
-    postgres_db_volume:
     grafana-storage:
