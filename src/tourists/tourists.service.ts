@@ -24,6 +24,11 @@ export class TouristsService {
     return provider;
   }
 
+  async findEvents(id: number) {
+    const tourist = await this.repo.findOne(id, { populate: ['events'] });
+    return tourist.events;
+  }
+
   async findCategories(id:number){
     const tourist = await this.repo.findOne(id);
     if(!tourist){
