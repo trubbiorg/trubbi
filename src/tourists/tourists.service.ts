@@ -35,6 +35,7 @@ export class TouristsService {
     if(!tourist){
       throw new HttpException("No se encontro el Turista solicitado.", 404);
     }
+    await tourist.categories.init();
     return  tourist.categories;
   }
   
@@ -48,11 +49,16 @@ export class TouristsService {
 
   //
   async addCategory(categoryID : number){
+    //chequear que existe la categoría
     const category = await this.categoryService.findOne(categoryID);
     if(!category){
       throw new HttpException("No se encontro la Categoría solicitada.", 404);
     }
+    //obtener el turista (hardcodeado porque en realidad es el turista logueado)
     const tourist = await this.repo.findOne(1);
+    await tourist.categories.init();
+    console.log(tourist);
+  
     tourist.categories.add(category);
     this.repo.persistAndFlush(tourist);
     return tourist.name + ' subscripto exitosamente a ' + category.name
