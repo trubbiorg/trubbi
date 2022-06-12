@@ -5,10 +5,12 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Tourist } from './tourist.entity';
 import { CategoryRepository } from 'src/categories/category.repository';
 import { CategoriesModule } from 'src/categories/categories.module';
+import { EventsService } from 'src/events/events.service';
+import { EventsModule } from 'src/events/events.module';
 
 @Module({
   controllers: [TouristsController],
-  imports: [MikroOrmModule.forFeature({ entities: [Tourist] }), CategoryRepository, CategoriesModule],
-  providers: [TouristsService,CategoryRepository]
+  imports: [MikroOrmModule.forFeature({ entities: [Tourist] }), CategoryRepository, CategoriesModule,EventsModule],
+  providers: [TouristsService,CategoryRepository,EventsModule]
 })
 export class TouristsModule {}

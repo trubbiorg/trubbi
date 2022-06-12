@@ -49,4 +49,14 @@ export class TouristsController {
   findCategories(@Param('id') id: string) {
     return this.touristsService.findCategories(+id);
   }
+
+  @Post('events/:eventId')
+  addEvent(@Param('eventId') eventId : string){
+    return this.touristsService.addEvent(+eventId);
+  }
+
+  @Get('events/:id')
+  getAllEvents(){
+    return this.touristsService.findAllEvents();
+  }
 }
