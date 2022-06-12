@@ -9,6 +9,7 @@ import { ProvidersModule } from 'src/providers/providers.module';
 @Module({
   controllers: [EventsController],
   imports: [MikroOrmModule.forFeature({ entities: [Event, Provider] }), ProvidersModule],
-  providers: [EventsService]
+  providers: [EventsService],
+  exports:[EventsService]
 })
 export class EventsModule {}

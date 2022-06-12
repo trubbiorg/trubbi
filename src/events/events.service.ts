@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ProvidersService } from '../providers/providers.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -10,18 +10,24 @@ export class EventsService {
   constructor(private readonly eventsRepository: EventsRepository, private readonly providerService: ProvidersService) {}
 
   async create(createEventDto: CreateEventDto) {
-    createEventDto.provider = await this.providerService.findOne(createEventDto.providerId);
+    const provider = await this.providerService.findOne(createEventDto.providerId);
+    if(!provider){
+      throw new HttpException("No se encontro el Turista solicitado.", 404);
+    }
+    createEventDto.provider = provider;
     this.eventsRepository.persistAndFlush(this.eventsRepository.create(createEventDto));
   }
 
   findAll() {
-    return `This action returns all events`;
+    return this.eventsRepository.findAll();
   }
 
   async findOne(id: number) {
     const event = await this.eventsRepository.findOne(id);
+    if(!event){
+      throw new HttpException("No se encontró el evento solicitado",404);
+    }
     return event;
-    //return `This action returns a #${id} event`;
   }
 
   update(id: number, updateEventDto: UpdateEventDto) {
@@ -29,7 +35,7 @@ export class EventsService {
   }
 
   async remove(id: number) {
-    const event = await this.eventsRepository.findOne(id);
-    return await this.eventsRepository.removeAndFlush(event);
+    const event = await this.findOne(id);
+        return await this.eventsRepository.removeAndFlush(event);
   }
 }
