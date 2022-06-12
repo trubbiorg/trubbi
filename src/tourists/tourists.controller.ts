@@ -40,8 +40,13 @@ export class TouristsController {
     return this.touristsService.remove(+id);
   }
 
-  @Post('addCategory')
-  addCategory(@Body() categoryId : number){
-    return this.touristsService.addCategory(categoryId);
+  @Post('category/:categoryId')
+  addCategory(@Param('categoryId') categoryId : string){
+    return this.touristsService.addCategory(+categoryId);
+  }
+
+  @Get('categories/:id')
+  findCategories(@Param('id') id: string) {
+    return this.touristsService.findCategories(+id);
   }
 }

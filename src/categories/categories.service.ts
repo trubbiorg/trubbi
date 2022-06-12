@@ -15,7 +15,7 @@ export class CategoriesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} category`;
+    return this.repo.findOne(id);
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {
