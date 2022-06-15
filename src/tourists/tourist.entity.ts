@@ -23,7 +23,7 @@ export class Tourist {
 
   @Property({ hidden: true })
   password!: string;
-  
+
   @ManyToMany({ entity: () => Event, pivotEntity: () => TouristsEvent })
   events = new Collection<Event>(this);
 

@@ -9,20 +9,20 @@ export class TouristsEvent {
   @PrimaryKey()
   id!: number;
 
-  @ManyToOne(() => Tourist,{ primary: true })
+  @ManyToOne(() => Tourist)
   tourist: Tourist;
 
-  @ManyToOne(() => Event,{ primary: true })
+  @ManyToOne(() => Event)
   event: Event;
 
   @Property()
-  favourite!: boolean;
+  favourite = false;
 
   @Property()
-  scheduled!: boolean;
+  scheduled = false;
 
   @OneToOne(() => Opinion, opinion => opinion.touristEvent)
-  opinion!: Opinion;
+  opinion?: Opinion;
 
   @Property()
   createdAt: Date = new Date();

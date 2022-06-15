@@ -12,7 +12,7 @@ export class Opinion {
   opinion!: string;
 
   @OneToOne(() => TouristsEvent)
-  touristEvent!: TouristsEvent;
+  touristEvent: TouristsEvent;
 
   @Property()
   createdAt: Date = new Date();
