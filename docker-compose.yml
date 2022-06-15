@@ -48,6 +48,7 @@ services:
             - "5055:5055"
             - "5080:5080" 
         environment:
+            - CYGNUS_MYSQL_SERVICE_PORT=5055
             - CYGNUS_MYSQL_HOST=trubbi-mariadb
             - CYGNUS_MYSQL_PORT=3306
             - CYGNUS_MYSQL_USER=root

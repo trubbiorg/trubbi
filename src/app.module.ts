@@ -7,6 +7,8 @@ import { OpinionsModule } from './opinions/opinions.module';
 import { EventsModule } from './events/events.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TouristsEventsModule } from './tourists_events/tourists_events.module';
+import { LoggingInterceptor } from './LoggingInterceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { TouristsEventsModule } from './tourists_events/tourists_events.module';
     TouristsEventsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
+  ],
 })
 export class AppModule {}
