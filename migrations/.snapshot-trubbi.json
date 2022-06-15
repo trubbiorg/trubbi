@@ -74,7 +74,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "length": 0,
           "mappedType": "datetime"
         }
@@ -114,15 +114,6 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "phone": {
-          "name": "phone",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
         "password": {
           "name": "password",
           "type": "varchar(255)",
@@ -134,43 +125,43 @@
         },
         "status": {
           "name": "status",
-          "type": "tinyint(1)",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "default": "false",
-          "mappedType": "boolean"
+          "default": "'Esperando aprobacion'",
+          "mappedType": "string"
         },
         "created_at": {
           "name": "created_at",
-          "type": "datetime",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
-          "mappedType": "datetime"
+          "length": 11,
+          "mappedType": "integer"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "datetime",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
-          "mappedType": "datetime"
+          "length": 11,
+          "mappedType": "integer"
         },
         "deleted_at": {
           "name": "deleted_at",
-          "type": "datetime",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 0,
-          "mappedType": "datetime"
+          "length": 11,
+          "mappedType": "integer"
         }
       },
       "name": "provider",
@@ -226,14 +217,23 @@
           "nullable": false,
           "mappedType": "integer"
         },
-        "address": {
-          "name": "address",
-          "type": "varchar(255)",
+        "latitude": {
+          "name": "latitude",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "integer"
+        },
+        "longitude": {
+          "name": "longitude",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
         },
         "photo": {
           "name": "photo",
@@ -244,41 +244,65 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "start_date": {
-          "name": "start_date",
+        "status": {
+          "name": "status",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "'Activo'",
           "mappedType": "string"
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 11,
+          "mappedType": "integer"
         },
         "end_date": {
           "name": "end_date",
-          "type": "varchar(255)",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "length": 11,
+          "mappedType": "integer"
         },
-        "publish_date": {
-          "name": "publish_date",
-          "type": "varchar(255)",
+        "created_at": {
+          "name": "created_at",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "length": 11,
+          "mappedType": "integer"
         },
-        "end_publish_date": {
-          "name": "end_publish_date",
-          "type": "varchar(255)",
+        "updated_at": {
+          "name": "updated_at",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "length": 11,
+          "mappedType": "integer"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 11,
+          "mappedType": "integer"
         }
       },
       "name": "event",
@@ -324,8 +348,8 @@
           "name": "id",
           "type": "int",
           "unsigned": true,
-          "autoincrement": false,
-          "primary": false,
+          "autoincrement": true,
+          "primary": true,
           "nullable": false,
           "mappedType": "integer"
         },
@@ -349,21 +373,21 @@
         },
         "favourite": {
           "name": "favourite",
-          "type": "tinyint(1)",
+          "type": "json",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "boolean"
+          "mappedType": "json"
         },
         "scheduled": {
           "name": "scheduled",
-          "type": "tinyint(1)",
+          "type": "json",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "boolean"
+          "mappedType": "json"
         },
         "opinion_id": {
           "name": "opinion_id",
@@ -373,6 +397,36 @@
           "primary": false,
           "nullable": true,
           "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "datetime",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "datetime",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "mappedType": "datetime"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "datetime",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 0,
+          "mappedType": "datetime"
         }
       },
       "name": "tourists_event",
@@ -398,11 +452,9 @@
         {
           "keyName": "PRIMARY",
           "columnNames": [
-            "id",
-            "tourist_id",
-            "event_id"
+            "id"
           ],
-          "composite": true,
+          "composite": false,
           "primary": true,
           "unique": true
         }
@@ -477,35 +529,45 @@
           "nullable": false,
           "mappedType": "integer"
         },
-        "tourist_event_tourist_id": {
-          "name": "tourist_event_tourist_id",
-          "type": "int",
-          "unsigned": true,
+        "created_at": {
+          "name": "created_at",
+          "type": "datetime",
+          "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "length": 0,
+          "mappedType": "datetime"
         },
-        "tourist_event_event_id": {
-          "name": "tourist_event_event_id",
-          "type": "int",
-          "unsigned": true,
+        "updated_at": {
+          "name": "updated_at",
+          "type": "datetime",
+          "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "length": 0,
+          "mappedType": "datetime"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "datetime",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 0,
+          "mappedType": "datetime"
         }
       },
       "name": "opinion",
       "indexes": [
         {
           "columnNames": [
-            "tourist_event_id",
-            "tourist_event_tourist_id",
-            "tourist_event_event_id"
+            "tourist_event_id"
           ],
-          "composite": true,
-          "keyName": "opinion_tourist_event_id_tourist_event_tourist_id__681ec_unique",
+          "composite": false,
+          "keyName": "opinion_tourist_event_id_unique",
           "primary": false,
           "unique": true
         },
@@ -521,18 +583,14 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "opinion_tourist_event_id_tourist_event_tourist_id_00d03_foreign": {
-          "constraintName": "opinion_tourist_event_id_tourist_event_tourist_id_00d03_foreign",
+        "opinion_tourist_event_id_foreign": {
+          "constraintName": "opinion_tourist_event_id_foreign",
           "columnNames": [
-            "tourist_event_id",
-            "tourist_event_tourist_id",
-            "tourist_event_event_id"
+            "tourist_event_id"
           ],
           "localTableName": "opinion",
           "referencedColumnNames": [
-            "id",
-            "tourist_id",
-            "event_id"
+            "id"
           ],
           "referencedTableName": "tourists_event",
           "updateRule": "cascade"
@@ -561,33 +619,33 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "datetime",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
-          "mappedType": "datetime"
+          "length": 11,
+          "mappedType": "integer"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "datetime",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
-          "mappedType": "datetime"
+          "length": 11,
+          "mappedType": "integer"
         },
         "deleted_at": {
           "name": "deleted_at",
-          "type": "datetime",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
-          "length": 0,
-          "mappedType": "datetime"
+          "nullable": true,
+          "length": 11,
+          "mappedType": "integer"
         }
       },
       "name": "category",
@@ -833,7 +891,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "length": 0,
           "mappedType": "datetime"
         }

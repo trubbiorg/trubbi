@@ -1,9 +1,9 @@
 #!/bin/sh
 
 echo "Running NPM Install"
-if [ ! -d node_modules ]; then
-    npm install
-fi
+npm install
+
+npx mikro-orm migration:fresh
 
 npm run build
 

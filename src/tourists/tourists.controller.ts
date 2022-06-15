@@ -30,9 +30,19 @@ export class TouristsController {
     return this.touristsService.findOne(+id);
   }
 
+  @Post(':id/events/:eventId')
+  scheduleEvent(@Param('id') id: number, @Param('eventId') eventId: number) {
+    return this.touristsService.scheduleEvent(+id, +eventId);
+  }
+
   @Get(':id/events')
-  findEvents(@Param('id') id: number) {
-    return this.touristsService.findEvents(+id);
+  scheduled(@Param('id') id: number) {
+    return this.touristsService.scheduled(id);
+  }
+
+  @Get(':id/history')
+  history(@Param('id') id: number) {
+    return this.touristsService.history(id);
   }
 
   @Patch(':id')
@@ -46,7 +56,7 @@ export class TouristsController {
   }
 
   @Post('category/:categoryId')
-  addCategory(@Param('categoryId') categoryId : string){
+  addCategory(@Param('categoryId') categoryId: string) {
     return this.touristsService.addCategory(+categoryId);
   }
 

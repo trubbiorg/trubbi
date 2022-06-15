@@ -1,13 +1,16 @@
-import { Collection, Entity, ManyToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { Collection, Entity, Filter, ManyToMany, PrimaryKey, Property, types } from "@mikro-orm/core";
 import { Event } from "../events/event.entity";
 import { Tourist } from "../tourists/tourist.entity";
 import { CategoryRepository } from "./category.repository";
+import { getUnixTime } from 'date-fns'
 
 @Entity({ customRepository: () => CategoryRepository })
+@Filter({ name: 'findByIds', cond: args => ({ id: { $in: args.ids } }) })
+@Filter({ name: 'withoutDeleted', cond: { deleted_at: null } })
 export class Category {
 
   @PrimaryKey()
-  id!: number;
+  id?: number;
 
   @Property()
   name!: string;
@@ -18,16 +21,12 @@ export class Category {
   @ManyToMany(() => Tourist, tourist => tourist.categories)
   tourists = new Collection<Tourist>(this);
 
-  @Property()
-  createdAt: Date = new Date();
+  @Property({ type: types.integer, length: 11, onCreate: () => getUnixTime(new Date()) })
+  createdAt: number = getUnixTime(new Date());
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+  @Property({ type: types.integer, length: 11, onUpdate: () => getUnixTime(new Date()) })
+  updatedAt: number = getUnixTime(new Date());
 
-  @Property({nullable : true})
-  deleted_at?: Date = null;
-
-  constructor(name: string){
-    this.name = name;
-  }
+  @Property({ type: types.integer, length: 11, nullable : true })
+  deleted_at?: number;
 }

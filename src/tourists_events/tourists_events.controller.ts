@@ -3,32 +3,32 @@ import { TouristsEventsService } from './tourists_events.service';
 import { CreateTouristsEventDto } from './dto/create-tourists_event.dto';
 import { UpdateTouristsEventDto } from './dto/update-tourists_event.dto';
 
-@Controller('tourists-events')
+@Controller()
 export class TouristsEventsController {
   constructor(private readonly touristsEventsService: TouristsEventsService) {}
 
-  @Post()
-  create(@Body() createTouristsEventDto: CreateTouristsEventDto) {
-    return this.touristsEventsService.create(createTouristsEventDto);
-  }
+  // @Post()
+  // create(@Body() createTouristsEventDto: CreateTouristsEventDto) {
+  //   return this.touristsEventsService.create(createTouristsEventDto);
+  // }
 
-  @Get()
-  findAll() {
-    return this.touristsEventsService.findAll();
-  }
+  // @Get('tourist/:touristId/history')
+  // history(@Param('touristId') touristId: number) {
+  //   return this.touristsEventsService.history(touristId);
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.touristsEventsService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.touristsEventsService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTouristsEventDto: UpdateTouristsEventDto) {
-    return this.touristsEventsService.update(+id, updateTouristsEventDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateTouristsEventDto: UpdateTouristsEventDto) {
+  //   return this.touristsEventsService.update(+id, updateTouristsEventDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.touristsEventsService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.touristsEventsService.remove(+id);
+  // }
 }

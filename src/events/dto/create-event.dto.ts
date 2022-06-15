@@ -1,28 +1,52 @@
-import { IsDateString, IsInt, IsString } from 'class-validator';
+import { ArrayUnique, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Category } from 'src/categories/category.entity';
 import { Provider } from 'src/providers/provider.entity';
 
 export class CreateEventDto {
 
+  @IsNotEmpty()
   @IsString()
-  title!: string;
+  title: string;
 
+  @IsNotEmpty()
   @IsString()
-  description!: string;
+  description: string;
 
-  @IsInt()
-  providerId!: number;
-  
+  @IsNotEmpty()
+  @IsNumber()
+  providerId: number;
+
   provider: Provider;
 
-  @IsString()
-  address!: string;
-  
-  @IsString()
-  photo!: string;
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayUnique()
+  // @IsNumber(null, { each: true })
+  categoriesIds: number[];
 
-  @IsDateString()
-  start_date!: string;
+  categories: Array<Category>;
 
-  @IsDateString()
-  end_date!: string;
+  @IsNotEmpty()
+  @IsBoolean()
+  public: boolean;
+
+  @IsNotEmpty()
+  @IsNumber()
+  latitude!: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  longitude!: number;
+
+  @IsNotEmpty()
+  @IsString()
+  photo: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  start_date: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  end_date: number;
 }
