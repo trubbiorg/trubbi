@@ -61,7 +61,7 @@ export class ProvidersService {
   async remove(id: number) {
     const provider = await this.providerRepository.findOne({id}, { populate: ['events'], filters: ['withoutDeleted'] });
     if (!provider) {
-      throw new HttpException( "No se encontro el Proveedor solicitado.", 404 );
+      throw new HttpException( "No se encontro el Proveedor solicitado sabes?.", 404 );
     }
     this.providerRepository.assign(provider, { deleted_at: getUnixTime(new Date()) })
     provider.events.toArray().map(event => event.id).map(this.eventsService.remove);
