@@ -6,9 +6,10 @@ import { ProvidersModule } from './providers/providers.module';
 import { OpinionsModule } from './opinions/opinions.module';
 import { EventsModule } from './events/events.module';
 import { CategoriesModule } from './categories/categories.module';
-import { TouristsEventsModule } from './tourists_events/tourists_events.module';
 import { LoggingInterceptor } from './LoggingInterceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ScheduleModule } from './schedule/schedule.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     OpinionsModule,
     EventsModule,
     CategoriesModule,
-    TouristsEventsModule,
+    ScheduleModule,
+    FavoritesModule,
   ],
   controllers: [],
   providers: [

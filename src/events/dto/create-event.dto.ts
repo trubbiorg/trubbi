@@ -31,6 +31,10 @@ export class CreateEventDto {
   public: boolean;
 
   @IsNotEmpty()
+  @IsString()
+  address!: string;
+
+  @IsNotEmpty()
   @IsNumber()
   latitude!: number;
 

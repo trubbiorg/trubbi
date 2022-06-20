@@ -1,12 +1,12 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import crypto from 'crypto';
+import { Entity, PrimaryKey, Property, types } from "@mikro-orm/core";
+import { getUnixTime } from "date-fns";
 import { AdminRepository } from "./admins.repository";
 
 @Entity({ customRepository: () => AdminRepository })
 export class Admin {
 
   @PrimaryKey()
-  id!: number;
+  id?: number;
 
   @Property()
   name!: string;
@@ -17,19 +17,12 @@ export class Admin {
   @Property({ hidden: true })
   password!: string;
 
-  @Property()
-  createdAt: Date = new Date();
+  @Property({ type: types.integer, length: 11, onCreate: () => getUnixTime(new Date()), hidden: true })
+  createdAt: number = getUnixTime(new Date());
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+  @Property({ type: types.integer, length: 11, onUpdate: () => getUnixTime(new Date()), hidden: true })
+  updatedAt: number = getUnixTime(new Date());
 
-  @Property({nullable : true})
-  deleted_at?: Date = null;
-
-
-  constructor(name: string, email: string, password: string) {
-    this.name = name;
-    this.email = email;
-    this.password = crypto.createHmac('sha256', password).digest('hex');
-  }
+  @Property({ type: types.integer, length: 11, nullable : true, hidden: true })
+  deleted_at?: number;
 }

@@ -1,16 +1,16 @@
-import { Collection, Entity, ManyToMany, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
-import { plainToClassFromExist } from "class-transformer";
-import crypto from 'crypto';
+import { Collection, Entity, Filter, ManyToMany, OneToMany, PrimaryKey, Property, types } from "@mikro-orm/core";
+import { getUnixTime } from "date-fns";
 import { Category } from "../categories/category.entity";
 import { Event } from "../events/event.entity";
-import { TouristsEvent } from "../tourists_events/tourists_event.entity";
+import { TouristsEvent } from "./tourists_event.entity";
 import { TouristsRepository } from "./tourists.repository";
 
 @Entity({ customRepository: () => TouristsRepository })
+@Filter({ name: 'withoutDeleted', cond: { deleted_at: null } })
 export class Tourist {
 
   @PrimaryKey()
-  id!: number;
+  id?: number;
 
   @Property()
   name!: string;
@@ -18,31 +18,24 @@ export class Tourist {
   @Property()
   email!: string;
 
-  @Property()
-  phone!: string;
-
   @Property({ hidden: true })
   password!: string;
 
-  @ManyToMany({ entity: () => Event, pivotEntity: () => TouristsEvent })
+  @ManyToMany({ entity: () => Event, owner: true, pivotEntity: () => TouristsEvent, hidden:true })
   events = new Collection<Event>(this);
 
-  @ManyToMany(() => Category, 'tourists', { owner: true })
+  @ManyToMany(() => Category, 'tourists', { owner: true, hidden: true })
   categories = new Collection<Category>(this);
 
-  @Property()
-  createdAt: Date = new Date();
+  @OneToMany(() => TouristsEvent, touristsEvents => touristsEvents.tourist, { hidden:true })
+  touristsEvents = new Collection<TouristsEvent>(this);
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+  @Property({ type: types.integer, length: 11, onCreate: () => getUnixTime(new Date()), hidden: true })
+  createdAt: number = getUnixTime(new Date());
 
-  @Property({nullable : true})
-  deleted_at?: Date = null;
+  @Property({ type: types.integer, length: 11, onUpdate: () => getUnixTime(new Date()), hidden: true })
+  updatedAt: number = getUnixTime(new Date());
 
-  constructor(name: string, email: string, phone: string, password: string) {
-    this.name = name;
-    this.email = email;
-    this.phone = phone;
-    this.password = password;
-  }
+  @Property({ type: types.integer, length: 11, nullable : true, hidden: true })
+  deleted_at?: number;
 }

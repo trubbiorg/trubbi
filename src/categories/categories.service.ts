@@ -1,15 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryRepository } from './category.repository';
 import { Category } from './category.entity';
 import { getUnixTime } from 'date-fns'
+import { EventsService } from 'src/events/events.service';
+import { Event } from 'src/events/event.entity';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private readonly categoryRepository: CategoryRepository) {}
+  constructor(
+    private readonly categoryRepository: CategoryRepository,
+    @Inject(forwardRef(() => EventsService))
+    private readonly eventService: EventsService
+  ) {}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return this.categoryRepository.persistAndFlush(this.categoryRepository.create(createCategoryDto))
+  async create(createCategoryDto: CreateCategoryDto) {
+    const category: Category = this.categoryRepository.create(createCategoryDto);
+    await this.categoryRepository.persistAndFlush(category);
+    return category;
   }
 
   findAll() {
@@ -19,25 +27,29 @@ export class CategoriesService {
   async findOne(id: number): Promise<Category> {
     const category: Category = await this.categoryRepository.findOne({id}, { filters: ['withoutDeleted'] });
     if(!category){
-      throw new Error("No se encontro la Categoria");
+      throw new HttpException("No se encontro la Categoria", 404);
     }
     return category;
   }
 
-  async findEvents(id: number) { //: Promise<Collection<Event>> {
-    const category: Category = await this.findOne(id);
-    return category.events;
+  async findEvents(id: number) {
+    return await this.eventService.findByCategory(id);
   }
 
   async findByIds(ids: number[]): Promise<Array<Category>> {
-    return await this.categoryRepository.findAll({
-      filters: { findByIds: { ids } },
+    const categories: Category[] = await this.categoryRepository.findAll({
+      filters: { findByIds: { ids }, withoutDeleted: true },
     });
+    if(categories.length != ids.length){
+      throw new HttpException('No se encontro una de las categorias', 404);
+    }
+    return categories;
   }
 
   async remove(id: number) {
     const category: Category = await this.findOne(id);
     this.categoryRepository.assign(category, { deleted_at: getUnixTime(new Date()) })
-    return this.categoryRepository.persistAndFlush(category);
+    await this.categoryRepository.persistAndFlush(category);
+    return category;
   }
 }

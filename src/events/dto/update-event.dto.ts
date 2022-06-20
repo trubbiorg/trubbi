@@ -2,9 +2,6 @@ import { ArrayUnique, IsArray, IsBoolean, IsIn, IsNotEmpty, IsNumber, IsString }
 import { Category } from 'src/categories/category.entity';
 
 export class UpdateEventDto{
-
-  id?: number;
-
   @IsNotEmpty()
   @IsString()
   title: string;
@@ -16,7 +13,7 @@ export class UpdateEventDto{
   @IsNotEmpty()
   @IsArray()
   @ArrayUnique()
-  @IsNumber(null, { each: true })
+  // @IsNumber(null, { each: true })
   categoriesIds: number[];
 
   categories: Array<Category>;
@@ -24,6 +21,10 @@ export class UpdateEventDto{
   @IsNotEmpty()
   @IsBoolean()
   public: boolean;
+
+  @IsNotEmpty()
+  @IsString()
+  address!: string;
 
   @IsNotEmpty()
   @IsNumber()
