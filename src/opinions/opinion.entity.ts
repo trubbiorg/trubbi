@@ -1,5 +1,5 @@
 import { Entity, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
-import { TouristsEvent } from "../tourists_events/tourists_event.entity";
+import { TouristsEvent } from "../tourists/tourists_event.entity";
 import { OpinionsRepository } from "./opinions.repository";
 
 @Entity({ customRepository: () => OpinionsRepository })

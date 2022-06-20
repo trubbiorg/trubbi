@@ -12,7 +12,6 @@ export class LoggingInterceptor<T> implements NestInterceptor<T, Response<T>> {
   intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
     const httpClient = new HttpService();
     const req = context.switchToHttp().getRequest();
-    // const res = context.switchToHttp().getResponse();
     const body = {
       request: {
         type: "String",
@@ -24,15 +23,20 @@ export class LoggingInterceptor<T> implements NestInterceptor<T, Response<T>> {
       }
     }
     httpClient.post('http://orion:1026/v2/entities/logs/attrs', body).toPromise()
-      .then(response => console.log(response))
+      .then(response => response)
       .catch(function (error) {
-        console.log(error);
+        error;
       });
 
     return next.handle().pipe(map(response => {
 
       // const statusCode: number = res.statusCode
-      // const body: string = JSON.stringify(response)
+      const body = {response: response}
+      httpClient.post('http://orion:1026/v2/entities/logs/attrs', body).toPromise()
+        .then(response => response)
+        .catch(function (error) {
+          error;
+        });
 
       // console.log(statusCode, body, headers);
       return (response);

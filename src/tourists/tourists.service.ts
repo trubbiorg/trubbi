@@ -2,101 +2,89 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateTouristDto } from './dto/create-tourist.dto';
 import { UpdateTouristDto } from './dto/update-tourist.dto';
 import { TouristsRepository } from 'src/tourists/tourists.repository';
-import { CategoryRepository } from 'src/categories/category.repository';
 import { CategoriesService } from 'src/categories/categories.service';
-// import { Console, debug } from 'console';
 import { EventsService } from 'src/events/events.service';
 import { Event } from 'src/events/event.entity';
 import { Collection } from '@mikro-orm/core';
 import { getUnixTime } from 'date-fns'
+import { LoginTouristDto } from './dto/login-tourist.dto';
+import { Role } from 'src/auth/role.enum';
+import { JwtService } from '@nestjs/jwt';
+import { CategoriesTouristDto } from './dto/categories-tourist.dto';
 
 
 @Injectable()
 export class TouristsService {
   constructor(
     private readonly repo: TouristsRepository,
-    private readonly catRepo: CategoryRepository,
     private readonly categoryService: CategoriesService,
+    private jwtService: JwtService,
     private readonly eventService: EventsService) { }
 
   async create(createTouristDto: CreateTouristDto) {
-    await this.repo.persistAndFlush(this.repo.create(createTouristDto));
-  }
-
-  findAll() {
-    return this.repo.findAll();
-  }
-
-  async findOne(id: number) {
-    const provider = await this.repo.findOne(id);
-    console.log(provider);
-    if(!provider){
-      throw new HttpException("No se encontro el Turista solicitado.", 404);
+    let tourist = await this.repo.findOne({ email: createTouristDto.email });
+    if(tourist){
+      throw new HttpException("El usuario ya existe", 400);
     }
-    return provider;
+    tourist = this.repo.create(createTouristDto);
+    await this.repo.persistAndFlush(tourist);
+    return tourist;
   }
 
-  async findEvents(id: number) {
-    const tourist = await this.repo.findOne(id, { populate: ['events'] });
-    return tourist.events;
-  }
-
-  async scheduleEvent(id, eventId: number) {
-    //chequear que existe la categoría
-    const event = await this.eventService.findOne(eventId);
-    if(!event){
-      throw new HttpException("No se encontro el Evento solicitado.", 404);
+  async login(body: LoginTouristDto){
+    const user = await this.repo.findOne({ email: body.email });
+    if (user && user.password === body.password) {
+      const payload = { email: user.email, id: user.id, role: Role.Tourist };
+      return {access_token: this.jwtService.sign(payload)};
     }
-    //obtener el turista (hardcodeado porque en realidad es el turista logueado)
-    const tourist = await this.repo.findOne(id);
-    await tourist.events.init();
-
-    tourist.events.add(event);
-    this.repo.persistAndFlush(tourist);
-    return tourist.name + ' subscripto exitosamente a ' + event.title
+    throw new HttpException("Credenciales Invalidas", 401);
   }
 
-  async scheduled(id: number): Promise<Collection<Event>> {
-    const tourist = await this.repo.findOne({id, events: { end_date: getUnixTime(new Date()) } }, { populate: ['events'] });
-    return tourist.events;
-  }
-
-  async history(id: number): Promise<Collection<Event>> {
-    const tourist = await this.repo.findOne({id, events: { end_date: { $lt: getUnixTime(new Date()) } } }, { populate: ['events'] });
-    return tourist.events;
-  }
-
-  async findCategories(id:number){
-    const tourist = await this.repo.findOne(id);
+  async findOne(jwtUserId: number, id: number) {
+    const tourist = await this.repo.findOne({id}, { filters: ["withoutDeleted"] });
     if(!tourist){
       throw new HttpException("No se encontro el Turista solicitado.", 404);
     }
-    await tourist.categories.init();
-    return  tourist.categories;
-  }
-
-  update(id: number, updateTouristDto: UpdateTouristDto) {
-    return `This action updates a #${id} tourist`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} tourist`;
-  }
-
-  //
-  async addCategory(categoryID : number){
-    //chequear que existe la categoría
-    const category = await this.categoryService.findOne(categoryID);
-    if(!category){
-      throw new HttpException("No se encontro la Categoría solicitada.", 404);
+    if(tourist.id != jwtUserId){
+      throw new HttpException("No Tiene permisos sobre el turista solicitado.", 404);
     }
-    //obtener el turista (hardcodeado porque en realidad es el turista logueado)
-    const tourist = await this.repo.findOne(1);
-    await tourist.categories.init();
-    console.log(tourist);
+    return tourist;
+  }
 
-    tourist.categories.add(category);
+  async update(jwtUserId: number, id: number, updateTouristDto: UpdateTouristDto) {
+    const tourist = await this.findOne(jwtUserId, id);
+    this.repo.assign(tourist, updateTouristDto);
     this.repo.persistAndFlush(tourist);
-    return tourist.name + ' subscripto exitosamente a ' + category.name
-}
+    return tourist;
+  }
+
+  async remove(jwtUserId: number, id: number) {
+    const tourist = await this.findOne(jwtUserId, id);
+    this.repo.assign(tourist, { deleted_at: getUnixTime(new Date()) });
+    this.repo.persistAndFlush(tourist);
+    return tourist;
+  }
+
+  async setCategories(jwtUserId: number, categoriesTouristDto: CategoriesTouristDto){
+    const tourist = await this.repo.findOne({ id: jwtUserId }, { populate: ['categories'] });
+    const categories = await this.categoryService.findByIds(categoriesTouristDto.categoriesIds);
+    tourist.categories.getItems().map(category => {
+      if(!categories.includes(category)){
+        tourist.categories.remove(category);
+      }
+    });
+    categories.map(category => {
+      if(!tourist.categories.contains(category)){
+        tourist.categories.add(category);
+      }
+    });
+    this.repo.persistAndFlush(tourist);
+    return tourist;
+  }
+
+  async findCategories(jwtUserId:number){
+    console.log("LLEGO");
+    const tourist = await this.repo.findOne({ id: jwtUserId }, { populate: ['categories'] });
+    return tourist.categories;
+  }
 }

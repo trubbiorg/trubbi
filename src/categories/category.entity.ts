@@ -15,18 +15,18 @@ export class Category {
   @Property()
   name!: string;
 
-  @ManyToMany(() => Event, event => event.categories)
+  @ManyToMany(() => Event, event => event.categories, { hidden: true })
   events = new Collection<Event>(this);
 
-  @ManyToMany(() => Tourist, tourist => tourist.categories)
+  @ManyToMany(() => Tourist, tourist => tourist.categories, { hidden: true })
   tourists = new Collection<Tourist>(this);
 
-  @Property({ type: types.integer, length: 11, onCreate: () => getUnixTime(new Date()) })
+  @Property({ type: types.integer, length: 11, onCreate: () => getUnixTime(new Date()), hidden: true })
   createdAt: number = getUnixTime(new Date());
 
-  @Property({ type: types.integer, length: 11, onUpdate: () => getUnixTime(new Date()) })
+  @Property({ type: types.integer, length: 11, onUpdate: () => getUnixTime(new Date()), hidden: true })
   updatedAt: number = getUnixTime(new Date());
 
-  @Property({ type: types.integer, length: 11, nullable : true })
+  @Property({ type: types.integer, length: 11, nullable : true, hidden: true })
   deleted_at?: number;
 }
