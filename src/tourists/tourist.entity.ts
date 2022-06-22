@@ -6,7 +6,7 @@ import { TouristsEvent } from "./tourists_event.entity";
 import { TouristsRepository } from "./tourists.repository";
 
 @Entity({ customRepository: () => TouristsRepository })
-@Filter({ name: 'withoutDeleted', cond: { deleted_at: null } })
+@Filter({ name: 'withoutTouristsDeleted', cond: { deleted_at: null } })
 export class Tourist {
 
   @PrimaryKey()

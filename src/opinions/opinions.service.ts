@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
+import { ScheduleService } from 'src/schedule/schedule.service';
 import { CreateOpinionDto } from './dto/create-opinion.dto';
-import { UpdateOpinionDto } from './dto/update-opinion.dto';
+import { Opinion } from './opinion.entity';
+import { OpinionsRepository } from './opinions.repository';
 
 @Injectable()
 export class OpinionsService {
-  create(createOpinionDto: CreateOpinionDto) {
-    return 'This action adds a new opinion';
+  constructor(
+    private readonly opinionRepository: OpinionsRepository,
+    @Inject(forwardRef(() => ScheduleService))
+    private readonly scheduleService: ScheduleService
+  ) {}
+
+  async create(jwtUserID: number, createOpinionDto: CreateOpinionDto) {
+    const opinion: Opinion = this.opinionRepository.create(createOpinionDto);
+    opinion.touristEvent = await this.scheduleService.findOne(jwtUserID, createOpinionDto.eventId);
+    if(!opinion.touristEvent){
+      throw new HttpException('No se encontro el evento a opinar', 404)
+    }
+    await this.opinionRepository.persistAndFlush(opinion);
+    return opinion;
   }
 
-  findAll() {
-    return `This action returns all opinions`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} opinion`;
-  }
-
-  update(id: number, updateOpinionDto: UpdateOpinionDto) {
-    return `This action updates a #${id} opinion`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} opinion`;
+  async findAllByEvent(eventId: number, offset: number) {
+    const [opinions, count] = await this.opinionRepository.findAndCount({ touristEvent: { event: { id: eventId } } }, { populate: ["touristEvent.event"], limit: 10, offset: offset });
+    return { opinions: opinions, page: offset/10+1, totalPages: Math.ceil(count/10) };
   }
 }

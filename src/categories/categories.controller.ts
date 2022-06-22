@@ -21,7 +21,7 @@ export class CategoriesController {
   }
 
   @UseInterceptors(TransformInterceptor)
-  @Roles(Role.Admin, Role.Tourist)
+  @Roles(Role.Admin, Role.Provider, Role.Tourist)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   findAll() {

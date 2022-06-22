@@ -21,6 +21,14 @@ export class ProvidersController {
     return this.providersService.create(createProviderDto);
   }
 
+  @UseInterceptors(TransformInterceptor)
+  @Roles(Role.Provider)
+  @UseGuards(JwtAuthGuard,RolesGuard)
+  @Get('me')
+  findMe(@Request() req) {
+    return this.providersService.findOne(req.user.id, req.user.id);
+  }
+
   @Post('login')
   async login(@Body() req: LoginProviderDto) {
     return this.providersService.login(req);
@@ -40,13 +48,6 @@ export class ProvidersController {
   @Get(':id')
   findOne(@Request() req, @Param('id') id: number) {
     return this.providersService.findOne(req.user.id, id);
-  }
-
-  @Roles(Role.Admin, Role.Provider)
-  @UseGuards(JwtAuthGuard,RolesGuard)
-  @Get(':id/events')
-  findEvents(@Param('id') id: number) {
-    return this.providersService.findEvents(id);
   }
 
   @UseInterceptors(TransformInterceptor)

@@ -1,10 +1,10 @@
-import { Collection, Entity, Filter, OneToMany, PrimaryKey, Property, types } from "@mikro-orm/core";
+import { Collection, Entity, Filter, OneToMany, PrimaryKey, Property, QueryOrder, types } from "@mikro-orm/core";
 import { Event } from "../events/event.entity";
 import { ProviderRepository } from "./providers.repository";
 import { getUnixTime } from 'date-fns'
 
 @Entity({ customRepository: () => ProviderRepository })
-@Filter({ name: 'withoutDeleted', cond: { deleted_at: null } })
+@Filter({ name: 'withoutProvidersDeleted', cond: { deleted_at: null } })
 export class Provider {
 
   @PrimaryKey()

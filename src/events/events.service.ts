@@ -22,6 +22,9 @@ export class EventsService {
   ) {}
 
   async create(jwtUserId: number, createEventDto: CreateEventDto) {
+    if(createEventDto.start_date >= createEventDto.end_date){
+      throw new HttpException('La fecha de fin debe ser mayor a la fecha de inicio', 400);
+    }
     createEventDto.provider = await this.providerService.findOne(jwtUserId, createEventDto.providerId);
     if(createEventDto.provider.status != "Aprobado"){
       throw new Error("No puede crear un evento para un proveedor inactivo.");
@@ -41,9 +44,16 @@ export class EventsService {
     },
     {
       populate: ['provider', 'categories', 'categories.tourists'],
-      filters: ['withoutDeleted'],
-      limit: 10,
-      offset: 0,
+      filters: ['withoutEventsDeleted'],
+      orderBy: { start_date: QueryOrder.ASC }
+    });
+  }
+
+  findAllByName(name: string) {
+    return this.eventsRepository.find({title: { $like: `%${name}%` }},
+    {
+      populate: ['provider', 'categories', 'categories.tourists'],
+      filters: ['withoutEventsDeleted'],
       orderBy: { start_date: QueryOrder.ASC }
     });
   }
@@ -89,15 +99,16 @@ export class EventsService {
     },
     {
       populate: ['provider', 'categories'],
-      filters: ['withoutDeleted'],
-      limit: 10,
-      offset: 0,
+      filters: ['withoutEventsDeleted'],
       orderBy: { start_date: QueryOrder.ASC }
     });
   }
 
   async update(jwtUserId: number, id: number, updateEventDto: UpdateEventDto) {
-    const event: Event = await this.eventsRepository.findOne({id}, { populate: ['provider', 'categories'], filters: ['withoutDeleted'] });
+    if(updateEventDto.start_date >= updateEventDto.end_date){
+      throw new HttpException('La fecha de fin debe ser mayor a la fecha de inicio', 400);
+    }
+    const event: Event = await this.eventsRepository.findOne({id}, { populate: ['provider', 'categories'], filters: ['withoutEventsDeleted'] });
     if(!event){
       throw new HttpException( "No se encontro el Evento solicitado.", 404 );
     }
@@ -120,20 +131,28 @@ export class EventsService {
     return event;
   }
 
+  async findAllByProvider(providerId: number, offset: number) {
+    const [events, count] = await this.eventsRepository.findAndCount({ provider: { id: providerId } }, {
+      limit: 10, offset: offset
+    });
+    return { events: events, page: offset/10+1, totalPages: Math.ceil(count/10) };
+  }
+
   async remove(jwtUserId: number, id: number) {
-    const event: Event = await this.eventsRepository.findOne({id}, { populate: ['provider'], filters: ['withoutDeleted'] });
+    const event: Event = await this.eventsRepository.findOne({id}, { populate: ['provider'], filters: ['withoutEventsDeleted'] });
     if(!event){
       throw new HttpException( "No se encontro el Evento solicitado.", 404 );
     }
     if(event.provider.id != jwtUserId){
       throw new HttpException('No tiene permisos para ver este evento', 403);
     }
+    console.log(event.start_date,  getUnixTime(new Date()))
     if(event.start_date <= getUnixTime(new Date())){
       throw new HttpException('No puede eliminar un evento ya comenzado o finalizado', 403);
     }
     this.eventsRepository.assign(event, { status: 'Cancelado', deleted_at: getUnixTime(new Date()) });
     this.eventsRepository.persistAndFlush(event);
-    await this.eventsRepository.removeAndFlush(event);
+    // await this.eventsRepository.removeAndFlush(event);
     return { result: "El evento fue eliminado con exito." }
   }
 }
