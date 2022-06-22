@@ -6,16 +6,16 @@ services:
         build:
             context: .
             dockerfile: ./Dockerfile
-        restart: unless-stopped
+        restart: always
         volumes:
             - ./:/usr/aplication
         working_dir: /usr/aplication
         ports:
             - "3060:3000"
-            - "9665:9662"
+            - "9662:9662"
         networks:
             - trubbi-net
-    
+
     mariadb:
         image: mariadb:10.8.3
         container_name: trubbi-mariadb
@@ -28,25 +28,27 @@ services:
         ports:
             - 5004:3306
         networks:
-          - trubbi-net 
-    
+          - trubbi-net
+
     orion:
         image: fiware/orion
         hostname: orion
         container_name: fiware-orion
+        restart: always
         ports:
             - "1026:1026"
         command: -dbhost mongodb -logLevel DEBUG -noCache
         networks:
-            - trubbi-net  
+            - trubbi-net
 
     cygnus:
         image: fiware/cygnus-ngsi
         hostname: cygnus
         container_name: fiware-cygnus
+        restart: always
         ports:
             - "5055:5055"
-            - "5080:5080" 
+            - "5080:5080"
         environment:
             - CYGNUS_MYSQL_SERVICE_PORT=5055
             - CYGNUS_MYSQL_HOST=trubbi-mariadb
@@ -58,21 +60,22 @@ services:
             - "CYGNUS_SERVICE_PORT=5055"
             - "CYGNUS_API_PORT=5080"
         networks:
-            - trubbi-net  
+            - trubbi-net
         depends_on:
             - mariadb
-    
+
     mongodb:
         image: mongo:3.6
         container_name: mongodb
         hostname: mongodb
+        restart: always
         ports:
-            - "27017:27017" 
+            - "27017:27017"
         command: --bind_ip_all --smallfiles
         volumes:
             - mongo_db_volume:/data
         networks:
-            - trubbi-net  
+            - trubbi-net
 
     adminmongo:
         image: mrvautin/adminmongo
@@ -81,10 +84,11 @@ services:
         environment:
             - HOST=0.0.0.0
         networks:
-            - trubbi-net  
-    
+            - trubbi-net
+
     grafana:
         image: grafana/grafana-oss
+        restart: always
         ports:
             - 3502:3000
         environment:
@@ -92,7 +96,7 @@ services:
         volumes:
             - grafana-storage:/var/lib/grafana #admin - ORT2022!
         networks:
-            - trubbi-net  
+            - trubbi-net
 
 networks:
   trubbi-net:

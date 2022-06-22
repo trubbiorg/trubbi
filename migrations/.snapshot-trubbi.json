@@ -523,8 +523,17 @@
           "nullable": false,
           "mappedType": "integer"
         },
-        "opinion": {
-          "name": "opinion",
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "description": {
+          "name": "description",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
@@ -552,33 +561,33 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "datetime",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
-          "mappedType": "datetime"
+          "length": 11,
+          "mappedType": "integer"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "datetime",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
-          "mappedType": "datetime"
+          "length": 11,
+          "mappedType": "integer"
         },
         "deleted_at": {
           "name": "deleted_at",
-          "type": "datetime",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 0,
-          "mappedType": "datetime"
+          "length": 11,
+          "mappedType": "integer"
         }
       },
       "name": "opinion",

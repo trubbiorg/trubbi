@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20220620035503 extends Migration {
+export class Migration20220622053001 extends Migration {
 
   async up(): Promise<void> {
     this.addSql('create table `tourist` (`id` int unsigned not null auto_increment primary key, `name` varchar(255) not null, `email` varchar(255) not null, `password` varchar(255) not null, `created_at` int not null, `updated_at` int not null, `deleted_at` int null) default character set utf8mb4 engine = InnoDB;');
@@ -14,7 +14,7 @@ export class Migration20220620035503 extends Migration {
     this.addSql('alter table `tourists_event` add index `tourists_event_tourist_id_index`(`tourist_id`);');
     this.addSql('alter table `tourists_event` add index `tourists_event_event_id_index`(`event_id`);');
 
-    this.addSql('create table `opinion` (`id` int unsigned not null auto_increment primary key, `opinion` varchar(255) not null, `tourist_event_tourist_id` int unsigned not null, `tourist_event_event_id` int unsigned not null, `created_at` datetime not null, `updated_at` datetime not null, `deleted_at` datetime null) default character set utf8mb4 engine = InnoDB;');
+    this.addSql('create table `opinion` (`id` int unsigned not null auto_increment primary key, `title` varchar(255) not null, `description` varchar(255) not null, `tourist_event_tourist_id` int unsigned not null, `tourist_event_event_id` int unsigned not null, `created_at` int not null, `updated_at` int not null, `deleted_at` int null) default character set utf8mb4 engine = InnoDB;');
     this.addSql('alter table `opinion` add unique `opinion_tourist_event_tourist_id_tourist_event_event_id_unique`(`tourist_event_tourist_id`, `tourist_event_event_id`);');
 
     this.addSql('create table `category` (`id` int unsigned not null auto_increment primary key, `name` varchar(255) not null, `created_at` int not null, `updated_at` int not null, `deleted_at` int null) default character set utf8mb4 engine = InnoDB;');

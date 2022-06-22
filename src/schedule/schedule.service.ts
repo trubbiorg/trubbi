@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { getUnixTime } from 'date-fns';
 import { Event } from 'src/events/event.entity';
 import { EventsService } from 'src/events/events.service';
@@ -12,6 +12,7 @@ export class ScheduleService {
   constructor(
     private readonly touristsEventRepository: TouristsEventRepository,
     private readonly touristService: TouristsService,
+    @Inject(forwardRef(() => EventsService))
     private readonly eventService: EventsService
   ) {}
 

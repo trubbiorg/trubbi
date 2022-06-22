@@ -1,4 +1,5 @@
-import { Entity, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, OneToOne, PrimaryKey, Property, types } from "@mikro-orm/core";
+import { getUnixTime } from "date-fns";
 import { TouristsEvent } from "../tourists/tourists_event.entity";
 import { OpinionsRepository } from "./opinions.repository";
 
@@ -6,20 +7,23 @@ import { OpinionsRepository } from "./opinions.repository";
 export class Opinion {
 
   @PrimaryKey()
-  id!: number;
+  id?: number;
 
   @Property()
-  opinion!: string;
+  title!: string;
+
+  @Property()
+  description!: string;
 
   @OneToOne(() => TouristsEvent)
   touristEvent: TouristsEvent;
 
-  @Property()
-  createdAt: Date = new Date();
+  @Property({ type: types.integer, length: 11, onCreate: () => getUnixTime(new Date()), hidden: true })
+  createdAt: number = getUnixTime(new Date());
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+  @Property({ type: types.integer, length: 11, onUpdate: () => getUnixTime(new Date()), hidden: true })
+  updatedAt: number = getUnixTime(new Date());
 
-  @Property({nullable : true})
-  deleted_at?: Date = null;
+  @Property({ type: types.integer, length: 11, nullable : true, hidden: true })
+  deleted_at?: number;
 }

@@ -32,11 +32,11 @@ export class LoggingInterceptor<T> implements NestInterceptor {
         }
       }
     }
-    httpClient.post('http://orion:1026/v2/entities/trubbi/attrs', requestLog).toPromise()
-      .then(response => response)
-      .catch(function (error) {
-        console.log(error);
-      });
+    // httpClient.post('http://orion:1026/v2/entities/trubbi/attrs', requestLog).toPromise()
+    //   .then(response => response)
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
 
     const response = context.switchToHttp().getResponse();
     return next.handle().pipe(tap(
@@ -51,11 +51,11 @@ export class LoggingInterceptor<T> implements NestInterceptor {
             }
           }
         }
-        httpClient.post('http://orion:1026/v2/entities/trubbi/attrs', responseLog).toPromise()
-        .then(response => response)
-        .catch(function (error) {
-          error;
-        });
+        // httpClient.post('http://orion:1026/v2/entities/trubbi/attrs', responseLog).toPromise()
+        // .then(response => response)
+        // .catch(function (error) {
+        //   error;
+        // });
       }
     ));
   }

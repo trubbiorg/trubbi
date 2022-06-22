@@ -1,13 +1,17 @@
-import { ArrayUnique, IsArray, IsBoolean, IsIn, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { ArrayUnique, IsArray, IsBoolean, IsIn, IsLatitude, IsLongitude, IsNotEmpty, IsNumber, IsString, Length, Matches, Min } from 'class-validator';
+import { getUnixTime } from 'date-fns';
 import { Category } from 'src/categories/category.entity';
 
 export class UpdateEventDto{
   @IsNotEmpty()
   @IsString()
+  // @Matches('^[A-Za-zÀ-ÿ\u00f1\u00d1\\s]*$')
   title: string;
 
   @IsNotEmpty()
   @IsString()
+  // @Matches('^[A-Za-zÀ-ÿ\u00f1\u00d1\\s]*$')
+  @Length(120, 205)
   description: string;
 
   @IsNotEmpty()
@@ -27,11 +31,11 @@ export class UpdateEventDto{
   address!: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsLongitude()
   latitude!: number;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsLatitude()
   longitude!: number;
 
   @IsNotEmpty()
@@ -40,6 +44,7 @@ export class UpdateEventDto{
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(getUnixTime(new Date()))
   start_date: number;
 
   @IsNotEmpty()

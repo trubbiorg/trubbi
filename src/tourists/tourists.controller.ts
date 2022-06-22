@@ -53,17 +53,17 @@ export class TouristsController {
   @UseInterceptors(TransformInterceptor)
   @Roles(Role.Tourist)
   @UseGuards(JwtAuthGuard,RolesGuard)
-  @Get(':id')
-  findOne(@Request() req, @Param('id') id: number) {
-    return this.touristsService.findOne(req.user.id, id);
+  @Get('me')
+  findOne(@Request() req) {
+    return this.touristsService.findOne(req.user.id, req.user.id);
   }
 
   @UseInterceptors(TransformInterceptor)
   @Roles(Role.Tourist)
   @UseGuards(JwtAuthGuard,RolesGuard)
-  @Put(':id')
-  update(@Request() req, @Param('id') id: number, @Body() updateTouristDto: UpdateTouristDto) {
-    return this.touristsService.update(req.user.id, id, updateTouristDto);
+  @Put()
+  update(@Request() req, @Body() updateTouristDto: UpdateTouristDto) {
+    return this.touristsService.update(req.user.id, req.user.id, updateTouristDto);
   }
 
   @UseInterceptors(TransformInterceptor)

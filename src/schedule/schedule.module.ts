@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { ScheduleController } from './schedule.controller';
 import { TouristsModule } from 'src/tourists/tourists.module';
@@ -15,7 +15,7 @@ import { Event } from 'src/events/event.entity';
   controllers: [ScheduleController],
   imports: [MikroOrmModule.forFeature({entities: [TouristsEvent, Tourist, Event]}),
     TouristsModule,
-    EventsModule,
+    forwardRef(() => EventsModule),
     JwtStrategy,
     JwtModule.register({
       secret: 'secretKey',
@@ -23,6 +23,7 @@ import { Event } from 'src/events/event.entity';
     }),
     TouristsEventRepository
   ],
+  exports: [ScheduleService],
   providers: [ScheduleService]
 })
 export class ScheduleModule {}

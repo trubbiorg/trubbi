@@ -6,7 +6,7 @@ import { getUnixTime } from 'date-fns'
 
 @Entity({ customRepository: () => CategoryRepository })
 @Filter({ name: 'findByIds', cond: args => ({ id: { $in: args.ids } }) })
-@Filter({ name: 'withoutDeleted', cond: { deleted_at: null } })
+@Filter({ name: 'withoutCategoriesDeleted', cond: { deleted_at: null } })
 export class Category {
 
   @PrimaryKey()
@@ -29,4 +29,8 @@ export class Category {
 
   @Property({ type: types.integer, length: 11, nullable : true, hidden: true })
   deleted_at?: number;
+
+  constructor(name) {
+    this.name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  }
 }
