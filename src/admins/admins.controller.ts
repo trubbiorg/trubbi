@@ -8,7 +8,6 @@ import { LoginAdminDto } from './dto/login-admin.dto';
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
-  @UseInterceptors(TransformInterceptor)
   @HttpCode(200)
   @Post('login')
   login(@Body() req: LoginAdminDto) {
