@@ -41,7 +41,7 @@ export class TouristsService {
   }
 
   async findOne(jwtUserId: number, id: number) {
-    const tourist = await this.repo.findOne({id}, { filters: ["withoutDeleted"] });
+    const tourist = await this.repo.findOne({id}, { filters: ["withoutTouristsDeleted"] });
     if(!tourist){
       throw new HttpException("No se encontro el Turista solicitado.", 404);
     }

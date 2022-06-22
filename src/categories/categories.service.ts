@@ -16,16 +16,19 @@ export class CategoriesService {
 
   async create(createCategoryDto: CreateCategoryDto) {
     const category: Category = this.categoryRepository.create(createCategoryDto);
+    if(await this.categoryRepository.findOne({name: category.name}, { filters: ['withoutCategoriesDeleted'] })){
+      throw new HttpException("La categoria ya existe", 400);
+    }
     await this.categoryRepository.persistAndFlush(category);
     return category;
   }
 
   findAll() {
-    return this.categoryRepository.findAll({ filters: ['withoutDeleted'] });
+    return this.categoryRepository.findAll({ filters: ['withoutCategoriesDeleted'] });
   }
 
   async findOne(id: number): Promise<Category> {
-    const category: Category = await this.categoryRepository.findOne({id}, { filters: ['withoutDeleted'] });
+    const category: Category = await this.categoryRepository.findOne({id}, { filters: ['withoutCategoriesDeleted'] });
     if(!category){
       throw new HttpException("No se encontro la Categoria", 404);
     }
@@ -38,7 +41,7 @@ export class CategoriesService {
 
   async findByIds(ids: number[]): Promise<Array<Category>> {
     const categories: Category[] = await this.categoryRepository.findAll({
-      filters: { findByIds: { ids }, withoutDeleted: true },
+      filters: { findByIds: { ids }, withoutCategoriesDeleted: true },
     });
     if(categories.length != ids.length){
       throw new HttpException('No se encontro una de las categorias', 404);

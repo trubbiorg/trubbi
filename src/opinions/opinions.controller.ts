@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Query } from '@nestjs/common';
 import { OpinionsService } from './opinions.service';
 import { CreateOpinionDto } from './dto/create-opinion.dto';
-import { UpdateOpinionDto } from './dto/update-opinion.dto';
 import { Roles } from 'src/auth/role.decorator';
 import { Role } from 'src/auth/role.enum';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -18,23 +17,10 @@ export class OpinionsController {
     return this.opinionsService.create(createOpinionDto);
   }
 
-  @Get()
-  findAll() {
-    return this.opinionsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.opinionsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOpinionDto: UpdateOpinionDto) {
-    return this.opinionsService.update(+id, updateOpinionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.opinionsService.remove(+id);
+  @Roles(Role.Provider)
+  @UseGuards(JwtAuthGuard,RolesGuard)
+  @Get("event/:eventId")
+  findAllByEvent(@Param('eventId') eventId: number, @Query('offset') offset = 0) {
+    return this.opinionsService.findAllByEvent(eventId, offset);
   }
 }

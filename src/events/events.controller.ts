@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, HttpException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, HttpException, Put, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -21,11 +21,26 @@ export class EventsController {
     return this.eventsService.create(req.user.id, createEventDto);
   }
 
+  @UseInterceptors(TransformInterceptor)
+  @Roles(Role.Admin, Role.Provider)
+  @UseGuards(JwtAuthGuard,RolesGuard)
+  @Get('provider')
+  findAllByProvider(@Request() req, @Query('providerId') providerId: number, @Query('offset') offset = 0) {
+    return this.eventsService.findAllByProvider((providerId) ?? req.user.id, offset);
+  }
+
   @Roles(Role.Tourist)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   findAll(@Request() req) {
     return this.eventsService.findAll(req.user.id);
+  }
+
+  @Roles(Role.Tourist)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('byName')
+  findAllByName(@Query('name') name: string) {
+    return this.eventsService.findAllByName(name);
   }
 
   @Roles(Role.Tourist, Role.Provider)

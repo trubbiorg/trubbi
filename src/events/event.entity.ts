@@ -8,7 +8,7 @@ import { TouristsEvent } from "../tourists/tourists_event.entity";
 import { Opinion } from "../opinions/opinion.entity";
 
 @Entity({ customRepository: () => EventsRepository })
-@Filter({ name: 'withoutDeleted', cond: { deleted_at: null } })
+@Filter({ name: 'withoutEventsDeleted', cond: { deleted_at: null } })
 @Filter({ name: 'active', cond: { $and: [
   { start_date: { $lt: getUnixTime(new Date()) }, },
   { deleted_at: null }

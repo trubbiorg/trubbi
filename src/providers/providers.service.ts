@@ -6,7 +6,7 @@ import { EventsService } from '../events/events.service';
 import { CreateProviderDto } from './dto/create-provider.dto';
 import { LoginProviderDto } from './dto/login-provider.dto';
 import { UpdateProviderDto } from './dto/update-provider.dto';
-import { providerStatus } from './provider.entity';
+import { Provider, providerStatus } from './provider.entity';
 import { ProviderRepository } from './providers.repository';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class ProvidersService {
   }
 
   async findOne(jwtUserId: number, id: number) {
-    const provider = await this.providerRepository.findOne({id}, { filters: ['withoutDeleted'] });
+    const provider = await this.providerRepository.findOne({id}, { filters: ['withoutProvidersDeleted'] });
     if (!provider) {
       throw new HttpException("No se encontro el Proveedor solicitado.", 404 );
     }
@@ -50,11 +50,6 @@ export class ProvidersService {
       throw new HttpException("No tiene permisos sobre el Proveedor solicitado", 403)
     }
     return provider;
-  }
-
-  async findEvents(id: number) {
-    const provider = await this.providerRepository.findOne({id}, { populate: ['events'], filters: ['withoutDeleted'] });
-    return provider.events;
   }
 
   async update(jwtUserId: number, id: number, updateProviderDto: UpdateProviderDto) {

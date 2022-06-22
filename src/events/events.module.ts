@@ -18,7 +18,7 @@ import { TouristsModule } from 'src/tourists/tourists.module';
     forwardRef(() => TouristsModule),
     forwardRef(() => ProvidersModule),
     forwardRef(() => CategoriesModule),
-    OpinionsModule,
+    forwardRef(() => OpinionsModule),
     JwtModule.register({
       secret: 'secretKey',
       signOptions: { expiresIn: '5h' },
