@@ -7,9 +7,10 @@ import { OpinionsModule } from './opinions/opinions.module';
 import { EventsModule } from './events/events.module';
 import { CategoriesModule } from './categories/categories.module';
 import { LoggingInterceptor } from './LoggingInterceptor';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from './schedule/schedule.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { FavoritesModule } from './favorites/favorites.module';
   controllers: [],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
   ],
 })
 export class AppModule {}
