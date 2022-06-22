@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Length, Matches } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, Length, Matches } from "class-validator";
 
 export class CreateOpinionDto {
   @IsNotEmpty()
@@ -11,4 +11,8 @@ export class CreateOpinionDto {
   @Matches('^[A-Za-zÀ-ÿ\u00f1\u00d1\\s]*$')
   @Length(120, 205)
   description: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  eventId: number;
 }

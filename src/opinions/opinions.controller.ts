@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Query, Request } from '@nestjs/common';
 import { OpinionsService } from './opinions.service';
 import { CreateOpinionDto } from './dto/create-opinion.dto';
 import { Roles } from 'src/auth/role.decorator';
@@ -13,8 +13,8 @@ export class OpinionsController {
   @Roles(Role.Tourist)
   @UseGuards(JwtAuthGuard,RolesGuard)
   @Post()
-  create(@Body() createOpinionDto: CreateOpinionDto) {
-    return this.opinionsService.create(createOpinionDto);
+  create(@Request() req, @Body() createOpinionDto: CreateOpinionDto) {
+    return this.opinionsService.create(req.user.id, createOpinionDto);
   }
 
   @Roles(Role.Provider)

@@ -50,7 +50,7 @@ export class EventsService {
   }
 
   findAllByName(name: string) {
-    return this.eventsRepository.find({title: { $like: `%${name}%` },},
+    return this.eventsRepository.find({title: { $like: `%${name}%` }},
     {
       populate: ['provider', 'categories', 'categories.tourists'],
       filters: ['withoutEventsDeleted'],
