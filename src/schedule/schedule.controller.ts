@@ -9,7 +9,9 @@ import { RolesGuard } from 'src/auth/roles.guard';
 @UseGuards(JwtAuthGuard,RolesGuard)
 @Controller('schedule')
 export class ScheduleController {
-  constructor(private readonly scheduleService: ScheduleService) {}
+  constructor(
+    private readonly scheduleService: ScheduleService,
+    ) {}
 
   @Post(':eventId')
   add(@Request() req, @Param('eventId') eventId: number){

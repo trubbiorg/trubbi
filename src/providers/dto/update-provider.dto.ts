@@ -5,7 +5,7 @@ export class UpdateProviderDto {
 
   @IsNotEmpty()
   @IsString()
-  @Matches('^[A-Za-zÀ-ÿ\u00f1\u00d1\\s]*$')
+  // @Matches('^[A-Za-zÀ-ÿ\u00f1\u00d1\\s]*$')
   name: string;
 
   @IsNotEmpty()

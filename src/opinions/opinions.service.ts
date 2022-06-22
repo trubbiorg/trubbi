@@ -22,7 +22,8 @@ export class OpinionsService {
     return opinion;
   }
 
-  findAllByEvent(eventId: number, offset: number) {
-    return this.opinionRepository.find({ touristEvent: { event: { id: eventId } } }, { populate: ["touristEvent.event"], limit: 10, offset: offset })
+  async findAllByEvent(eventId: number, offset: number) {
+    const [opinions, count] = await this.opinionRepository.findAndCount({ touristEvent: { event: { id: eventId } } }, { populate: ["touristEvent.event"], limit: 10, offset: offset });
+    return { opinions: opinions, page: offset/10+1, totalPages: Math.ceil(count/10) };
   }
 }
