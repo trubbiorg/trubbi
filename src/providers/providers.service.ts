@@ -37,8 +37,8 @@ export class ProvidersService {
     throw new HttpException("Credenciales Invalidas", 401);
   }
 
-  findAll(offset: number) {
-    return this.providerRepository.findAll({ limit: 10, offset: offset });
+  findAll() {
+    return this.providerRepository.findAll();
   }
 
   async findOne(jwtUserId: number, id: number) {

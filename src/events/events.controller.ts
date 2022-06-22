@@ -26,6 +26,9 @@ export class EventsController {
   @UseGuards(JwtAuthGuard,RolesGuard)
   @Get('provider')
   findAllByProvider(@Request() req, @Query('providerId') providerId: number, @Query('offset') offset = 0) {
+    if(req.user.role == Role.Admin && !providerId){
+      throw new HttpException('No se envio el providerId', 400);
+    }
     return this.eventsService.findAllByProvider((providerId) ?? req.user.id, offset);
   }
 

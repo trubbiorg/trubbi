@@ -38,8 +38,8 @@ export class ProvidersController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard,RolesGuard)
   @Get()
-  findAll(@Query('offset') offset = 0) {
-    return this.providersService.findAll(offset);
+  findAll() {
+    return this.providersService.findAll();
   }
 
   @UseInterceptors(TransformInterceptor)
